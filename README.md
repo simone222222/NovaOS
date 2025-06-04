@@ -8,6 +8,7 @@ the 2nd working os in c
 
 you must have:
 i686-elf toolchain
+  
   Tutorial from here:https://wiki.osdev.org/GCC_Cross-Compiler
 
 nasm
