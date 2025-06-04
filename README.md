@@ -1,5 +1,5 @@
 # NovaOS
-th 2nd working os in c
+the 2nd working os in c
 
 # How do i compile?
 
