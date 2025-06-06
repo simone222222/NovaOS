@@ -35,6 +35,9 @@ void process_command(char* command) {
         vga_write_string("  color  - Test VGA colors\n");
         vga_write_string("  ls     - List directory contents\n");
         vga_write_string("  cat    - Display file contents\n");
+        vga_write_string("  mkdir  - Create a new directory\n");
+        vga_write_string("  cd     - Change current directory\n");
+        vga_write_string("  mkfile - Create a new file\n");
     } else if (strncmp(command, "echo ", 5) == 0) {
         vga_write_string(command + 5); // Print everything after "echo "
         vga_newline();
@@ -92,6 +95,45 @@ void process_command(char* command) {
         vga_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
         vga_newline();
 
+    } else if (strncmp(command, "mkdir ", 6) == 0) {
+        int result = fs_create_directory(command + 6);
+        if (result == -1) {
+            vga_write_string("Error: Filesystem full\n");
+        } else if (result == -2) {
+            vga_write_string("Error: Directory already exists\n");
+        } else {
+            vga_write_string("Directory created successfully\n");
+        }
+    } else if (strncmp(command, "cd ", 3) == 0) {
+        int result = fs_change_directory(command + 3);
+        if (result == -1) {
+            vga_write_string("Error: Directory not found\n");
+        } else {
+            vga_write_string("Changed directory to: ");
+            vga_write_string(fs_get_current_directory());
+            vga_newline();
+        }
+    } else if (strncmp(command, "mkfile ", 7) == 0) {
+        // Find the first space after the filename to separate it from content
+        char* content_start = command + 7;
+        while (*content_start && *content_start != ' ') {
+            content_start++;
+        }
+        
+        if (*content_start == ' ') {
+            *content_start = '\0';  // Temporarily terminate the filename
+            int result = fs_create_file(command + 7, content_start + 1);
+            if (result == -1) {
+                vga_write_string("Error: Filesystem full\n");
+            } else if (result == -2) {
+                vga_write_string("Error: File already exists\n");
+            } else {
+                vga_write_string("File created successfully\n");
+            }
+        } else {
+            vga_write_string("Error: Please provide file content\n");
+            vga_write_string("Usage: mkfile filename content\n");
+        }
     } else {
         vga_write_string("Unknown command: ");
         vga_write_string(command);

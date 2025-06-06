@@ -9,20 +9,23 @@ void fs_init(void) {
     fs.file_count = 0;
     // Create root directory
     fs_create_directory("/");
+    // Set initial current directory to root
+    strcpy(fs.current_directory, "/");
 }
 
 int fs_create_file(const char* name, const char* content) {
+    char* full_path = fs_get_full_path(name);
     if (fs.file_count >= MAX_FILES) {
         return -1; // Filesystem full
     }
 
     // Check if file already exists
-    if (fs_find_file(name) != NULL) {
+    if (fs_find_file(full_path) != NULL) {
         return -2; // File already exists
     }
 
     struct file_entry* file = &fs.files[fs.file_count];
-    strncpy(file->name, name, MAX_FILENAME_LEN - 1);
+    strncpy(file->name, full_path, MAX_FILENAME_LEN - 1);
     file->name[MAX_FILENAME_LEN - 1] = '\0';
     
     if (content != NULL) {
@@ -38,16 +41,17 @@ int fs_create_file(const char* name, const char* content) {
 }
 
 int fs_create_directory(const char* name) {
+    char* full_path = fs_get_full_path(name);
     if (fs.file_count >= MAX_FILES) {
         return -1;
     }
 
-    if (fs_find_file(name) != NULL) {
+    if (fs_find_file(full_path) != NULL) {
         return -2;
     }
 
     struct file_entry* dir = &fs.files[fs.file_count];
-    strncpy(dir->name, name, MAX_FILENAME_LEN - 1);
+    strncpy(dir->name, full_path, MAX_FILENAME_LEN - 1);
     dir->name[MAX_FILENAME_LEN - 1] = '\0';
     dir->size = 0;
     dir->is_directory = 1;
@@ -56,8 +60,9 @@ int fs_create_directory(const char* name) {
 }
 
 int fs_list_directory(const char* path) {
+    char* full_path = fs_get_full_path(path);
     vga_write_string("Directory listing of ");
-    vga_write_string(path);
+    vga_write_string(full_path);
     vga_write_string(":\n");
     
     for (uint32_t i = 0; i < fs.file_count; i++) {
@@ -74,7 +79,8 @@ int fs_list_directory(const char* path) {
 }
 
 int fs_read_file(const char* name, char* buffer, uint32_t max_size) {
-    struct file_entry* file = fs_find_file(name);
+    char* full_path = fs_get_full_path(name);
+    struct file_entry* file = fs_find_file(full_path);
     if (file == NULL) {
         return -1; // File not found
     }
@@ -90,10 +96,61 @@ int fs_read_file(const char* name, char* buffer, uint32_t max_size) {
 }
 
 struct file_entry* fs_find_file(const char* name) {
+    char* full_path = fs_get_full_path(name);
     for (uint32_t i = 0; i < fs.file_count; i++) {
-        if (strcmp(fs.files[i].name, name) == 0) {
+        if (strcmp(fs.files[i].name, full_path) == 0) {
             return &fs.files[i];
         }
     }
     return NULL;
+}
+
+int fs_change_directory(const char* path) {
+    // Handle absolute paths
+    if (path[0] == '/') {
+        if (fs_find_file(path) == NULL) {
+            return -1; // Directory not found
+        }
+        strcpy(fs.current_directory, path);
+        return 0;
+    }
+    
+    // Handle relative paths
+    char new_path[MAX_PATH_LEN];
+    if (strcmp(fs.current_directory, "/") == 0) {
+        strcpy(new_path, "/");
+        strcat(new_path, path);
+    } else {
+        strcpy(new_path, fs.current_directory);
+        strcat(new_path, "/");
+        strcat(new_path, path);
+    }
+    
+    if (fs_find_file(new_path) == NULL) {
+        return -1; // Directory not found
+    }
+    
+    strcpy(fs.current_directory, new_path);
+    return 0;
+}
+
+const char* fs_get_current_directory(void) {
+    return fs.current_directory;
+}
+
+char* fs_get_full_path(const char* name) {
+    static char full_path[MAX_PATH_LEN];
+    if (name[0] == '/') {
+        strcpy(full_path, name);
+    } else {
+        if (strcmp(fs.current_directory, "/") == 0) {
+            strcpy(full_path, "/");
+            strcat(full_path, name);
+        } else {
+            strcpy(full_path, fs.current_directory);
+            strcat(full_path, "/");
+            strcat(full_path, name);
+        }
+    }
+    return full_path;
 } 
