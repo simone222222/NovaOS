@@ -25,9 +25,10 @@ This document tracks general development tasks for NovaOS.
 
 - [ ] Add more shell commands
   - [x] ls: List files
-  - [ ] cd: Change directory
+  - [x] cd: Change directory
   - [x] cat: Display file contents
   - [x] mkdir: Create directory
+  - [x] mkfile: Create file
 - [ ] Implement command history
 - [ ] Add command line editing
 - [ ] Support command arguments
