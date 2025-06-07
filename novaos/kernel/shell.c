@@ -11,13 +11,18 @@
 char cmd_buffer[CMD_BUFFER_SIZE];
 
 void shell_init(void) {
-    vga_write_string("NovaOS Shell v0.1\n");
+    vga_write_string("NovaOS Linux Shell v1.0\n");
     vga_write_string("Type 'help' for commands.\n");
 }
 
 void print_prompt(void) {
     vga_set_color(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK);
-    vga_write_string("NovaOS> ");
+    // first write the username
+    vga_write_string("root@novaos: "); 
+    // then write the current directory
+    vga_write_string(fs_get_current_directory());
+    // then write the prompt
+    vga_write_string("> ");
     vga_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 }
 
@@ -28,16 +33,18 @@ void process_command(char* command) {
 
     if (strcmp(command, "help") == 0) {
         vga_write_string("Available commands:\n");
-        vga_write_string("  help   - Show this help message\n");
-        vga_write_string("  echo   - Echo arguments (e.g., echo hello world)\n");
-        vga_write_string("  clear  - Clear the screen\n");
-        vga_write_string("  reboot - Reboot the system (via triple fault)\n");
-        vga_write_string("  color  - Test VGA colors\n");
-        vga_write_string("  ls     - List directory contents\n");
-        vga_write_string("  cat    - Display file contents\n");
-        vga_write_string("  mkdir  - Create a new directory\n");
-        vga_write_string("  cd     - Change current directory\n");
-        vga_write_string("  mkfile - Create a new file\n");
+        vga_write_string("  help    - Show this help message\n");
+        vga_write_string("  echo    - Echo arguments (e.g., echo hello world)\n");
+        vga_write_string("  clear   - Clear the screen\n");
+        vga_write_string("  reboot  - Reboot the system (via triple fault)\n");
+        vga_write_string("  color   - Test VGA colors\n");
+        vga_write_string("  ls      - List directory contents\n");
+        vga_write_string("  cat     - Display file contents\n");
+        vga_write_string("  mkdir   - Create a new directory\n");
+        vga_write_string("  cd      - Change current directory\n");
+        vga_write_string("  touch   - Create a new file\n");
+        vga_write_string("  neofetch - Display system information\n");
+        vga_write_string("  pwd     - Print working directory\n");
     } else if (strncmp(command, "echo ", 5) == 0) {
         vga_write_string(command + 5); // Print everything after "echo "
         vga_newline();
@@ -113,7 +120,7 @@ void process_command(char* command) {
             vga_write_string(fs_get_current_directory());
             vga_newline();
         }
-    } else if (strncmp(command, "mkfile ", 7) == 0) {
+    } else if (strncmp(command, "touch ", 6) == 0) {
         // Find the first space after the filename to separate it from content
         char* content_start = command + 7;
         while (*content_start && *content_start != ' ') {
@@ -132,11 +139,28 @@ void process_command(char* command) {
             }
         } else {
             vga_write_string("Error: Please provide file content\n");
-            vga_write_string("Usage: mkfile filename content\n");
+            vga_write_string("Usage: touch filename content\n");
         }
+    } else if (strcmp(command, "neofetch") == 0) {
+        vga_set_color(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK);
+        vga_write_string("NovaOS System Information\n");
+        vga_write_string("------------------------\n");
+        vga_set_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+        
+        vga_write_string("OS: NovaOS v0.1\n");
+        vga_write_string("Kernel: Custom x86_64\n");
+        vga_write_string("Terminal: VGA Text Mode\n");
+        vga_write_string("Shell: NovaOS Shell v0.1\n");
+        vga_write_string("Architecture: x86_64\n");
+        vga_write_string("Bootloader: GRUB\n");
+        vga_write_string("Filesystem: Custom in-memory FS\n");
+        vga_newline();
+    } else if (strcmp(command, "pwd") == 0) {
+        vga_write_string(fs_get_current_directory());
+        vga_newline();
     } else {
-        vga_write_string("Unknown command: ");
         vga_write_string(command);
+        vga_write_string(": command not found\n");
         vga_newline();
     }
 }
