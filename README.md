@@ -1,5 +1,4 @@
-![image](https://github.com/user-attachments/assets/7a71b5fb-250c-4e85-be7a-5e29d64a5f13)
-
+![image](https://github.com/user-attachments/assets/c3f76733-5069-4702-bca7-9fc8c8b3fa65)
 
 # NovaOS
 the 2nd working os in c
