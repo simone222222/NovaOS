@@ -32,3 +32,6 @@ and run `make`
 
 # Testing
 run `make run` to test in qemu
+
+# Known Issues
+if on virtualbox and typing reboot it will cause a guru meditation
