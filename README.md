@@ -1,5 +1,8 @@
 ![image](https://github.com/user-attachments/assets/c3f76733-5069-4702-bca7-9fc8c8b3fa65)
 
+# Note
+i invited The osdev devlopers to help me
+
 # NovaOS
 the 2nd working os in c
 
