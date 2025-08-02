@@ -2,5 +2,6 @@
 #include </usr/include/efi/efilib.h>
 
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
-//I will edit soon...
+    SystemTable SystemTable->ConOut->OutputString(SystemTable->ConOut, L"-------------------Nova Boot Manager----------------------");
+SystemTable->ConOut->OutputString(SystemTable->ConOut, L"")
 }
