@@ -7,7 +7,7 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable
     SystemTable->ConOut->SetAttribute(SystemTable->ConOut, EFI_CYAN);
     SystemTable->ConOut->OutputString(SystemTable->ConOut, L"----------------------------------Nova Boot Manager--------------------------------\r\n");
     SystemTable->ConOut->SetAttribute(SystemTable->ConOut, EFI_MAGENTA);
-    SystemTable->ConOut->OutputString(SystemTable->ConOut, L"To boot NovaOS, Press E/e, To reset press ESC, To start terminall press T/t");
+    SystemTable->ConOut->OutputString(SystemTable->ConOut, L"To boot NovaOS, Press E/e, To reset press ESC, To start terminal press T/t");
     
     while (1) {
         EFI_INPUT_KEY key;
