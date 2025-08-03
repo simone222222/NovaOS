@@ -1,3 +1,5 @@
+
+
 ![image](https://github.com/user-attachments/assets/c3f76733-5069-4702-bca7-9fc8c8b3fa65)
 
 # Note
@@ -5,6 +7,9 @@ i invited The osdev devlopers to help me
 
 # NovaOS
 the 2nd working os in c
+![image](https://github.com/simone222222/NovaOS/blob/main/nova-os-2.0/nova_logo.png)
+
+(logo by ataberk320)
 
 # How do i compile?
 
