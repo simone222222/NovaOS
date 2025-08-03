@@ -1,4 +1,4 @@
-//To be continued...
+
 #include </usr/include/efi/efi.h>
 #include </usr/include/efi/efilib.h>
 
