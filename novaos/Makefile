@@ -61,4 +61,6 @@ clean:
 	rm -rf build iso $(ISO_FILE)
 	@echo "Cleaned."
 
+# What? No Items No Items No PASS!!!
+
 .PHONY: all clean run
